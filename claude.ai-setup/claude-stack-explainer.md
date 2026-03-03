@@ -9,12 +9,12 @@
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                    YOU (Human)                       │
+│                    YOU (Human)                      │
 └───────────────────┬─────────────────────────────────┘
                     │ natural language
 ┌───────────────────▼─────────────────────────────────┐
-│              CLAUDE DESKTOP                          │
-│         (chat interface + MCP host)                  │
+│              CLAUDE DESKTOP                         │
+│         (chat interface + MCP host)                 │
 └───────┬───────────────────────────┬─────────────────┘
         │                           │
         │ Remote MCP                │ Local MCP
@@ -30,8 +30,8 @@
         └───────────────────────────┘
 
 ┌─────────────────────────────────────────────────────┐
-│              CLAUDE CODE (separate)                  │
-│         (terminal agent, file system access)         │
+│              CLAUDE CODE (separate)                 │
+│         (terminal agent, file system access)        │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -92,8 +92,8 @@ This is the most critical distinction — using the wrong path is why connection
 | Transport        | HTTPS via Anthropic infrastructure | stdio (local process)          |
 | How to connect   | Settings > Connectors              | Settings > Extensions (.mcpb)  |
 | Examples         | Gamma, Slack, Google Drive, Notion | Filesystem, custom tools       |
-| Node.js required | ❌                                  | ❌ (bundled in Claude Desktop)  |
-| JSON config file | ❌ Does not work                    | ✅ Developer use only           |
+| Node.js required | ❌                                 | ❌ (bundled in Claude Desktop)|
+| JSON config file | ❌ Does not work                   | ✅ Developer use only         |
 | Authentication   | OAuth flow in browser              | API key in extension settings  |
 
 **Rule:** If a service has a hosted MCP server (most SaaS tools do), always use **Connectors**. The `claude_desktop_config.json` file is for developers building custom local tools only.
@@ -159,8 +159,8 @@ Claude Desktop includes a built-in Node.js runtime — no Node.js install requir
 | File access    | Via MCP only       | Native              |
 | Shell access   | Via MCP only       | Native              |
 | Use case       | Tool orchestration | Agentic coding      |
-| MCP support    | ✅                  | ✅ (separate config) |
-| Windows native | ✅                  | ❌ Requires WSL2     |
+| MCP support    | ✅                 | ✅ (separate config) |
+| Windows native | ✅                 | ❌ Requires WSL2     |
 
 ---
 
