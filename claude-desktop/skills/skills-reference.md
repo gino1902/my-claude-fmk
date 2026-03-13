@@ -225,6 +225,8 @@ Skills in directories added via `--add-dir` are picked up without restarting the
 
 Skills do not sync across surfaces. A skill uploaded to claude.ai is not available in Claude Code, and vice versa.
 
+**Alternative for Claude Desktop:** If the Filesystem MCP is connected, skills can be loaded directly from the repo via a system prompt path declaration — no ZIP upload required. This is the pattern used in this workspace. See `skills-playbook.md` → Section 6 for setup, tradeoffs, and failure mode.
+
 ---
 
 ## 6. Templates

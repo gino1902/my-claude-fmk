@@ -15,8 +15,9 @@ Go there when you need to look something up. Stay here when you are doing someth
 3. Describe — making skills trigger reliably
 4. Build — the skill loop
 5. Install, update, commit
-6. Maintain — the persistence model
-7. Quick reference
+6. Filesystem skills via MCP (Claude Desktop)
+7. Maintain — the persistence model
+8. Quick reference
 
 ---
 
@@ -258,7 +259,64 @@ my-claude-fmk/
 
 ---
 
-## 6. Maintain — The Persistence Model
+## 6. Filesystem Skills via MCP (Claude Desktop)
+
+Uploaded skills (ZIP → Customize > Skills) are not the only delivery mechanism for Claude Desktop. If the Filesystem MCP is connected, Claude can load skills directly from the repo — no upload, no ZIP, no toggle.
+
+This is the pattern used in this workspace: skill source files live in `my-claude-fmk/claude-desktop/skills/` and the system prompt instructs Claude to read them from that path.
+
+### How it works
+
+The system prompt declares a skills path. When Claude starts a session, it reads the SKILL.md files from that directory into context on demand — matching them to your requests the same way uploaded skills work, but sourcing them from the filesystem instead of the installed skills store.
+
+Minimal system prompt snippet:
+
+```xml
+<skills>
+Load workspace skills from: /home/[wsl-user]/workspace/my-claude-fmk/claude-desktop/skills/
+For each subdirectory, read SKILL.md and treat it as an available skill.
+Fallback if path is unavailable: notify the user, then proceed without skills.
+</skills>
+```
+
+**What "loading" means here:** Claude reads the SKILL.md file content into the active context window when it determines the skill is relevant. This is functionally equivalent to uploaded skills — same progressive disclosure model, same description-driven triggering — but the source is the filesystem, not the installed skills store.
+
+### Uploaded skills vs. filesystem skills — when to use which
+
+| | Uploaded skills (ZIP) | Filesystem skills (MCP) |
+| :--- | :--- | :--- |
+| **MCP dependency** | None — always available | Requires Filesystem MCP connected |
+| **Update workflow** | Delete → re-ZIP → re-upload | Edit SKILL.md in repo → done |
+| **Persistence** | Survives session reset, reinstall risk | Lives in git — most durable |
+| **Sharing** | Per-user only (standard plans) | Shared via git — anyone who clones the repo gets them |
+| **Scope** | Available in all projects for that user | Available in projects where the system prompt declares the path |
+| **Best for** | Skills with no MCP dependency requirement; stable skills you rarely edit | Skills under active development; skills shared across team via git |
+
+### Failure mode
+
+If the Filesystem MCP disconnects, filesystem skills silently vanish — Claude cannot reach the path and will not automatically flag the gap in conversation. The system prompt snippet above includes an explicit fallback instruction (`notify the user`) to surface this.
+
+Verify MCP is live at session start:
+- Tools icon (hammer) visible in the Claude Desktop chat header
+- Ask Claude: *"What skills are available from the workspace skills path?"* — a correct answer confirms MCP and path are reachable
+
+### Maintenance advantage
+
+Filesystem skills have no upload cycle. Edit the SKILL.md in your editor, save, and the next conversation picks up the change automatically. Git history is the version log. No stale uploaded version to chase down.
+
+```bash
+# Edit skill, then commit
+git add claude-desktop/skills/your-skill/SKILL.md
+git commit -m "skills: update your-skill — [reason]"
+git push origin main
+# Next Claude Desktop session: change is live
+```
+
+> ⚠️ Filesystem skills and uploaded skills are independent. Having a skill in both places does not cause a conflict — Claude may load both descriptions. If both are toggled on, keep their descriptions identical to avoid drift.
+
+---
+
+## 7. Maintain — The Persistence Model
 
 Four layers. Know which one you are working in before acting.
 
@@ -299,7 +357,7 @@ GitHub repo (most durable)
 
 ---
 
-## 7. Quick Reference
+## 8. Quick Reference
 
 | Task | Where |
 | :--- | :--- |
@@ -310,6 +368,7 @@ GitHub repo (most durable)
 | Commit to repo | `git add skills/your-skill/` → commit → push |
 | Run proposal interview | See Section 1 — requires FRAMING.md + CONSTITUTION.md |
 | Build a new skill | Section 4, or ask Claude to run the skill-creator workflow |
+| Filesystem skills via MCP | Section 6 |
 | SKILL.md spec and templates | `skills-reference.md` |
 | Troubleshooting | `skills-reference.md` → Section 8 |
 
