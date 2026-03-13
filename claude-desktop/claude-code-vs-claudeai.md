@@ -59,7 +59,7 @@
 |:--------------------------------- |:------------------------------------------------------- |:--------------------------------------------------------- |
 | Feature exists?                   | Yes (since Oct 2025)                                    | Yes                                                       |
 | Pre-built skills available?       | Yes — `docx`, `xlsx`, `pptx`, `pdf` (Anthropic-managed) | No pre-built via filesystem; bundled skills ship with CLI |
-| Custom skills?                    | Yes — upload zip via Settings → Features                | Yes — filesystem at `.claude/skills/*/SKILL.md`           |
+| Custom skills?                    | Yes — upload zip via Settings > Capabilities or Customize > Skills | Yes — filesystem at `.claude/skills/*/SKILL.md`           |
 | Same SKILL.md format?             | Yes — open Agent Skills standard                        | Yes                                                       |
 | Auto-invoked by Claude?           | Yes — based on description match (~100 tokens metadata) | Yes — based on description match                          |
 | Manually invoked?                 | No slash commands in UI                                 | Yes — `/skill-name` in CLI                                |
