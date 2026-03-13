@@ -1,7 +1,7 @@
 # Claude Power Stack — Technical Explainer
 
 > Windows 11 | Claude Desktop + MCP + Claude Code
-> Version 2.0
+> Version 2.1
 
 ---
 
@@ -18,7 +18,7 @@
 └───────┬───────────────────────────┬─────────────────┘
         │                           │
         │ Remote MCP                │ Local MCP
-        │ Settings > Connectors     │ Settings > Extensions
+        │ Customize > Connectors    │ Settings > Extensions
         │                           │
 ┌───────▼───────┐         ┌─────────▼───────┐
 │ Hosted Service│         │ Local .mcpb     │
@@ -90,7 +90,7 @@ This is the most critical distinction — using the wrong path is why connection
 |:---------------- |:---------------------------------- |:------------------------------ |
 | What it is       | Hosted service on the internet     | Server running on your machine |
 | Transport        | HTTPS via Anthropic infrastructure | stdio (local process)          |
-| How to connect   | Settings > Connectors              | Settings > Extensions (.mcpb)  |
+| How to connect   | Customize > Connectors             | Settings > Extensions (.mcpb)  |
 | Examples         | Gamma, Slack, Google Drive, Notion | Filesystem, custom tools       |
 | Node.js required | ❌                                 | ❌ (bundled in Claude Desktop)|
 | JSON config file | ❌ Does not work                   | ✅ Developer use only         |
@@ -119,7 +119,7 @@ This is the most critical distinction — using the wrong path is why connection
 
 No Node.js, no npx, no JSON config required. Authentication is handled entirely via OAuth.
 
-**Note:** The Connectors UI may have moved to `Settings > Customize` in newer versions of Claude Desktop — check for a "Connectors have moved" banner and follow it.
+**Note:** Connectors have moved to **Customize > Connectors** in current versions of Claude Desktop (as of early 2026). The path `Settings > Connectors` may still appear in older versions.
 
 ---
 

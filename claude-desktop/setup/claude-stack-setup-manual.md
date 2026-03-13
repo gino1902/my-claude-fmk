@@ -1,7 +1,7 @@
 # Claude Power Stack — Setup Manual
 
 > Windows 11 | Claude Desktop + MCP + Claude Code
-> Version 2.1
+> Version 2.2
 
 ---
 
@@ -31,23 +31,23 @@ This is the correct path for all hosted SaaS integrations (Gamma, Slack, Google 
 
 ### 2.1 Browse and connect
 
-**Note:** In newer versions of Claude Desktop, Connectors may have moved to `Settings > Customize`. If you see a "Connectors have moved" banner, click "Go to Customize" instead.
+**Current canonical path: Customize > Connectors** (Connectors have moved out of Settings as of early 2026). The old `Settings > Connectors` path may still be present in some versions.
 
 **A) Service is in the built-in directory** (Google Drive, GitHub, Gmail, Google Calendar):
 
-1. Click your **initials** (bottom left) → **Settings**
-2. Navigate to **Connectors**
-3. Click **Browse Connectors**
-4. Find the service and click **Connect**
-5. Complete the **OAuth flow** in your browser — log in and click Allow
+1. Navigate to **Customize > Connectors** (or **Settings > Connectors** if you see that instead)
+2. Click **Browse Connectors**
+3. Find the service and click **Connect**
+4. Complete the **OAuth flow** in your browser — log in and click Allow
 
 **B) Service is not in the directory** (Gamma, Notion, Slack, and most others):
 
-1. Click your **initials** (bottom left) → **Settings**
-2. Navigate to **Connectors**
-3. Click **Add custom connector**
-4. Enter the service's remote MCP server URL (get this from the service's developer docs)
-5. Click Add → complete the **OAuth flow** in your browser
+1. Navigate to **Customize > Connectors**
+2. Click the **"+"** button next to Connectors
+3. Enter the connector name and remote MCP server URL
+4. Click Add → complete the **OAuth flow** in your browser
+
+> ✅ **v2.1 correction:** Previous version referenced `Settings > Connectors > Add custom connector`. Canonical current path is `Customize > Connectors > "+"` per support.claude.com (verified 2026-03-13).
 
 ### 2.2 Use the connector
 
