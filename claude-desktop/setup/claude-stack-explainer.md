@@ -1,7 +1,7 @@
 # Claude Power Stack — Technical Explainer
 
 > Windows 11 | Claude Desktop + MCP + Claude Code
-> Version 2.1
+> Version 2.2
 
 ---
 
@@ -78,6 +78,37 @@ Claude (LLM)   → tool call decision
 Claude Desktop → tools/call request  → MCP Server
 Claude Desktop ← tool result         ← MCP Server
 Claude (LLM)   → incorporates result into response
+```
+
+---
+
+### MCP Server Spawn Flow
+
+> How Claude Desktop resolves, downloads, and starts an MCP server process at session initialisation — from config file to callable tool.
+
+When Claude Desktop starts, it reads the `mcpServers` block in `claude_desktop_config.json` and spawns a child process for each entry. The command field determines the runtime: `npx` targets Node.js servers published to npm; `uvx` targets Python servers published to PyPI. Each runtime checks a local cache before downloading, then spawns the server process over stdio. Once running, the server advertises its tools to Claude Desktop — at which point they become available in the conversation.
+
+```mermaid
+flowchart TD
+    A([Claude Desktop starts]) --> B[Reads claude_desktop_config.json\nmcpServers block]
+    B --> C{Which command?}
+
+    C -->|npx| D[npx -y @mcp/server-filesystem\nNode.js runtime]
+    C -->|uvx| E[uvx mcp-server-git\nPython runtime]
+
+    D --> F[Check npm cache\nDownload from registry if missing]
+    E --> G[Check uv cache\nDownload from PyPI if missing]
+
+    F --> H[Spawn Node.js process\nRuns server JS entry point]
+    G --> I[Create ephemeral venv\nSpawn Python process]
+
+    H --> J[Exposes tools\nread_file, write_file, list_dir…]
+    I --> K[Exposes tools\ngit_log, git_diff, git_blame…]
+
+    J --> L[MCP stdio transport\nClaude ↔ server via stdin / stdout]
+    K --> L
+
+    L --> M([Tools available in conversation])
 ```
 
 ---
