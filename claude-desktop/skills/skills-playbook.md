@@ -380,8 +380,9 @@ GitHub repo (most durable)
 
 | Field | Value |
 | :--- | :--- |
-| Version | 1.0 |
-| Last Updated | 2026-03-13 |
+| Version | 1.1 |
+| Last Updated | 2026-03-26 |
 | Status | Final |
 
 *v1.0 — Restructured from skills-usage-guide.md (v2.0) and skills-guide.md (v1.0). Reorganised as playbook — procedural content only. Section order follows task execution sequence: commission → choose → describe → build → install → maintain. Description discipline elevated to standalone section (Section 3). Persistence model updated. SKILL.md anatomy removed — cross-reference to skills-reference.md. Companion doc header added.*
+*v1.1 — Version block bumped to reflect substantive changes made in prior session: Section 5 install paths updated (Customize > Skills); Section 6 workspace MCP pattern documented as primary delivery model for this workspace.*

@@ -121,7 +121,9 @@ Anthropic does not document a separate install flow for Claude Desktop. Both sur
 | Skill type | Plans |
 | :--- | :--- |
 | Anthropic-provided skills (PowerPoint, Excel, Word, PDF) | All plans including free |
-| Custom skills (upload your own) | Pro, Max, Team, Enterprise |
+| Custom skills (upload your own) | All plans including free ✱ |
+
+> ✱ Custom skills are available on all plans including free. The earlier restriction to Pro+ has been lifted. Verified: support.claude.com/use-skills-in-claude, 2026-03-26.
 
 ### Install a custom skill
 
@@ -157,9 +159,10 @@ Skills cannot be edited in place:
 | Delete | Click skill → "..." → Delete |
 | View installed skills | **Customize > Skills** |
 
-**Sharing:** Custom skills are private to your account. For org-wide provisioning (Team/Enterprise), use **Organization settings > Capabilities** — Owner access required. Skills cannot be shared peer-to-peer.
+**Sharing:** Custom skills are private to your account. For org-wide provisioning (Team/Enterprise), use **Organization settings > Skills** — Owner access required. Skills cannot be shared peer-to-peer.
 
-> ✅ Install path, plan availability, per-user scope: support.claude.com (2026-03-13)
+> ✅ Install path, per-user scope: support.claude.com (2026-03-13)
+> ✅ Plan availability updated (all plans incl. free): support.claude.com (2026-03-26)
 
 ---
 
@@ -225,7 +228,7 @@ Skills in directories added via `--add-dir` are picked up without restarting the
 
 Skills do not sync across surfaces. A skill uploaded to claude.ai is not available in Claude Code, and vice versa.
 
-**Alternative for Claude Desktop:** If the Filesystem MCP is connected, skills can be loaded directly from the repo via a system prompt path declaration — no ZIP upload required. This is the pattern used in this workspace. See `skills-playbook.md` → Section 6 for setup, tradeoffs, and failure mode.
+**Workspace pattern (Claude Desktop + Filesystem MCP):** This workspace does not use ZIP uploads as the primary delivery model. Skills live in the repo at `workspace/skills/` and are loaded via system prompt path declaration + Filesystem MCP reads — no upload cycle, no toggle, git is the version log. The ZIP upload model (Section 3) is the fallback for environments without MCP or for skills with no MCP dependency. See `skills-playbook.md` → Section 6 for setup, tradeoffs, and failure mode.
 
 ---
 
@@ -413,19 +416,20 @@ Before uploading:
 
 | Claim | Source | Date | Status |
 | :--- | :--- | :--- | :--- |
-| Anthropic-provided skills available to all plans incl. free | support.claude.com/what-are-skills | 2026-03-13 | ✅ Confirmed |
-| Custom skills require Pro, Max, Team, or Enterprise | support.claude.com/how-to-create-custom-skills | 2026-03-13 | ✅ Confirmed |
+| Anthropic-provided skills available to all plans incl. free | support.claude.com/use-skills-in-claude | 2026-03-13 | ✅ Confirmed |
+| Custom skills available to all plans incl. free | support.claude.com/use-skills-in-claude | 2026-03-26 | ✅ Confirmed — corrected from prior "Pro+ only" claim |
 | Install path: ZIP via Customize > Skills | support.claude.com/use-skills-in-claude | 2026-03-13 | ✅ Confirmed |
 | Old path "Settings → Extensions → Install Extension" + .skill file | — | 2026-03-13 | ❌ Stale — corrected |
-| Custom skills on claude.ai/Desktop are per-user, not org-wide | docs.claude.com/agent-skills/overview | 2026-03-13 | ✅ Confirmed |
+| Custom skills on claude.ai/Desktop are per-user, not org-wide | support.claude.com/use-skills-in-claude | 2026-03-26 | ✅ Confirmed — Team/Enterprise org provisioning via settings exists; individual peer-to-peer sharing not supported |
 | Description limit: 200 chars (claude.ai/Desktop) | support.claude.com/how-to-create-custom-skills | 2026-03-13 | ✅ Confirmed |
-| Description limit: 1024 chars (Claude Code) | docs.claude.com/claude-code/skills | 2026-03-13 | ✅ Confirmed |
-| `name` lowercase/hyphens-only scoped to Claude Code only | docs.claude.com/claude-code/skills | 2026-03-13 | ✅ Confirmed |
-| `context: fork`, `disable-model-invocation`: Claude Code only | docs.claude.com/claude-code/skills | 2026-03-13 | ✅ Confirmed |
+| Description limit: 1024 chars (Claude Code) | code.claude.com/docs/en/skills | 2026-03-13 | ✅ Confirmed |
+| `name` lowercase/hyphens-only scoped to Claude Code only | code.claude.com/docs/en/skills | 2026-03-13 | ✅ Confirmed |
+| `context: fork`, `disable-model-invocation`: Claude Code only | code.claude.com/docs/en/skills | 2026-03-13 | ✅ Confirmed |
 | ZIP must contain skill folder as root — not loose files | support.claude.com/how-to-create-custom-skills | 2026-03-13 | ✅ Confirmed |
 | Code execution required for skills on claude.ai/Desktop | support.claude.com/use-skills-in-claude | 2026-03-13 | ✅ Confirmed |
-| Skills do not sync across surfaces | docs.claude.com/agent-skills/overview | 2026-03-13 | ✅ Confirmed |
+| Skills do not sync across surfaces | support.claude.com/use-skills-in-claude | 2026-03-13 | ✅ Confirmed |
 | MCP failure: silent in-conversation, UI toast not always raised | GitHub issues #31864, #25751 | 2026-03-13 | ✅ Confirmed |
+| Claude Code native Windows install — no WSL, no Node.js required | code.claude.com/docs/en/setup | 2026-03-26 | ✅ Confirmed |
 
 ---
 
@@ -435,8 +439,9 @@ Before uploading:
 
 | Field | Value |
 | :--- | :--- |
-| Version | 1.0 |
-| Last Updated | 2026-03-13 |
+| Version | 1.2 |
+| Last Updated | 2026-03-26 |
 | Status | Final |
 
-*v1.0 — Restructured from skills-setup-guide.md (v1.5). Reorganised as reference-only doc. Removed procedural content (build loop, proposal interview, archetypes, description discipline) — moved to skills-playbook.md. Added companion doc header. Retained: spec, install, platform comparison, templates, packaging checklist, troubleshooting, verified claims log.*
+*v1.1 — Section 5: MCP filesystem pattern positioned as primary model for this workspace.*
+*v1.2 — Section 3: Plan availability corrected — custom skills available on all plans including free (was incorrectly listed as Pro+ only). Verified claims log updated accordingly. Windows/Node.js verified claim added.*

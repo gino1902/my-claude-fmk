@@ -1,20 +1,15 @@
-# TASKS.md — my-claude-fmk Task Tracker
+# TASKS.md — my-claude-fmk
 
 > Managed by Claude (proposed) + approved by you.
 > Triggers: `show tasks` | `next task` | `start task TASK-XXX` | `done task TASK-XXX` | `add task`
-> Convention: TASKS.md is written immediately after proposing — no confirmation required.
+> Convention: `managing-tasks: writes pre-approved`
 
 ---
 
 ## 🔴 Backlog
 
-- [x] TASK-008 | Restructure skills docs into reference and playbook (Option A) | `claude-desktop/skills/` | Current state: `skills-setup-guide.md` (reference manual, v1.5, verified) and `skills-guide.md` (operational guide, v1.0, partially stale). Action: (1) rename `skills-guide.md` → `skills-usage-guide.md`; (2) fix stale content — Quick Reference table still references old Extensions path, persistence model predates ZIP/Customize flow; (3) remove duplicated SKILL.md anatomy — cross-reference setup guide instead; (4) add cross-reference headers to both files; (5) add version block to usage guide (currently missing). Boundary: setup guide = reference/install/templates; usage guide = proposal interview, archetypes, build loop, description discipline, update/commit workflow.
-- [x] TASK-007 | Update playbook with all docs and tasks completed across repos | `claude-desktop/playbook/claude-project-playbook.md` | Cross-reference completed work in slide-gen and my-claude-fmk into the playbook — lessons learned, patterns confirmed, tasks closed — so the playbook reflects the current state of the framework not just its initial design | done: 2026-03-13
-- [x] TASK-006 | System prompt routing template — author and insert into playbook | `claude-desktop/playbook/` | Write a reusable system prompt template implementing the agreed routing architecture (default repo, override rules, skills injection, behavioural rules); insert as a worked example in `claude-project-playbook.md` alongside existing examples | done: 2026-03-13
-- [x] TASK-005 | Tech verify all documentation in `my-claude-fmk/` | `claude-desktop/` | Audit all docs against official Anthropic sources — verify claims about Projects, system prompts, knowledge files, skills, context window limits, and MCP behaviour; flag any outdated or unverified statements | done: 2026-03-13
-- [x] TASK-004 | Write system prompt template for multi-repo routing | `claude-desktop/playbook/` | Superseded by TASK-006 | done: 2026-03-13
-- [x] TASK-003 | Update `claude-project-playbook.md` for multi-project architecture | `claude-desktop/playbook/claude-project-playbook.md` | Sections 1 (System Prompt) and 3 (Skills) were written for single-project model — revise to reflect routing layer, per-repo CLAUDE.md scope, and MCP dependency caveat | done: 2026-03-13
-- [x] TASK-002 | Add CLAUDE.md to `my-claude-fmk/` | `my-claude-fmk/CLAUDE.md` | Repo has no CLAUDE.md yet — define output defaults for framework documentation (format, tone, version block, flagging rules) consistent with the configuration-layer-guide layer model | done: 2026-03-13
+- TASK-011: Run token audit on my-claude-fmk system prompt | target: Custom Instructions (my-claude-fmk project) | scope: project-bootstrapping skill added to workspace — prompt-maintenance rule requires audit when new skill is added; follow prompt-maintenance.md four-step pattern | blocker: sequence after TASK-012 — playbook changes may surface system prompt adjustments before audit runs
+- TASK-012: Document project-bootstrapping in claude-project-playbook.md | target: claude-desktop/playbook/claude-project-playbook.md | scope: add section or example entry covering the bootstrapping skill — trigger, 3-phase flow, MCP dependency, compose rules; consistent with existing examples table format | note: playbook restructured to v3.0 (2026-03-26) but bootstrapping entry not yet added — this task remains open
 
 ---
 
@@ -24,10 +19,16 @@
 
 ## ✅ Done
 
-- [x] TASK-001 | Multi-project routing architecture — clarify, chart, document | `claude-desktop/context/` | Clarified architecture (multiple projects, shared skills, shared repos); produced agreed mmd chart; rationalized `configuration-layer-guide.md` (v2.0) and `prompt-maintenance.md`; tech-verified routing concept against official Anthropic docs | done: 2026-03-13
+- TASK-001: Multi-project routing architecture — clarify, chart, document | target: claude-desktop/context/ | scope: clarified architecture; produced mmd chart; rationalized context-layers-guide.md v2.0 and prompt-maintenance.md; tech-verified routing concept | done: 2026-03-13
+- TASK-002: Add CLAUDE.md to my-claude-fmk/ | target: my-claude-fmk/CLAUDE.md | scope: repo defaults — format, tone, version block, flagging rules, layer boundaries | done: 2026-03-13
+- TASK-003: Update claude-project-playbook.md for multi-project architecture | target: claude-desktop/playbook/claude-project-playbook.md | scope: Sections 1 and 3 revised for routing layer, per-repo CLAUDE.md scope, MCP dependency caveat | done: 2026-03-13
+- TASK-004: Write system prompt template for multi-repo routing | target: claude-desktop/playbook/ | scope: superseded by TASK-005 | done: 2026-03-13
+- TASK-005: System prompt routing template — author and insert into playbook | target: claude-desktop/playbook/ | scope: routing-system-prompt-template.md authored; inserted as worked example in playbook with field guide, MCP checklist, verification markers | done: 2026-03-13
+- TASK-006: Tech verify all documentation in my-claude-fmk/ | target: claude-desktop/ | scope: audit against official Anthropic sources; flagged stale claims; verified install paths, plan gating, MCP behaviour | done: 2026-03-13
+- TASK-007: Update playbook with completed work across repos | target: claude-desktop/playbook/claude-project-playbook.md | scope: lessons learned from slide-gen and my-claude-fmk tasks cross-referenced; Section 11 (layer model) and Section 12 (operational hygiene) added | done: 2026-03-13
+- TASK-008: Restructure skills docs into reference and playbook | target: claude-desktop/skills/ | scope: skills-setup-guide.md → skills-reference.md; skills-guide.md → skills-playbook.md; stale content fixed; SKILL.md anatomy removed and cross-referenced; version blocks added | done: 2026-03-13
+- TASK-009: Fix stale and contradictory content across my-claude-fmk docs | target: claude-desktop/ | scope: claude-stack-explainer.md v2.3 (UI path corrected); context-layers-guide.md v2.2 (precedence diagram split into two axes); claude-project-playbook.md v3.0 (Knowledge Files verification scoped per-claim; Skills section MCP-first); skills-reference.md v1.1 (MCP pattern repositioned as primary) | done: 2026-03-26
 
 ---
 
-*Last updated: 2026-03-13 — all tasks closed*
-
-> ⚠️ Post-TASK-008: `skills-setup-guide.md` and `skills-usage-guide.md` are stub redirects — delete them with `git rm` and commit.
+*Last updated: 2026-03-26 — TASK-009 closed (doc fixes from challenge pass); TASK-011 blocker note added; TASK-012 note added clarifying playbook restructure does not satisfy the task*

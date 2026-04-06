@@ -321,3 +321,4 @@ Validate JSON before saving at [jsonlint.com](https://jsonlint.com).
 ---
 
 *Doc 2 of 2 — see 01-claude-stack-explainer.md for architecture and component details*
+*MCP server setup guides: filesystem-mcp-wsl2-setup.md | mcp-server-git-setup.md*

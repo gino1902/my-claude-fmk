@@ -1,7 +1,7 @@
 # Claude Tool Map — Which Tool for Which Job
 
 > Windows 11 | Claude Desktop + Claude Cowork + Claude Code
-> Version 1.0
+> Version 1.1
 
 ---
 
@@ -37,7 +37,7 @@ A desktop automation tool focused on **local file and task automation**. It does
 
 ### Claude Code
 
-A terminal-based **agentic coding tool**. It runs in PowerShell and has native access to your file system, shell, and git. It operates in a long-horizon autonomous loop.
+A terminal-based **agentic coding tool**. It installs natively on Windows (requires Git for Windows) and has native access to your file system, shell, and git. It operates in a long-horizon autonomous loop. WSL is supported but not required.
 
 **Best for:**
 
@@ -58,7 +58,11 @@ A terminal-based **agentic coding tool**. It runs in PowerShell and has native a
 | External API integrations  | ✅              | ❌             | ✅                   |
 | Local automation (no code) | ❌              | ✅             | ❌                   |
 | Agentic coding             | ❌              | ❌             | ✅                   |
-| Requires Node.js           | ✅              | ❌             | ✅                   |
+| Requires Node.js           | ✅ (for local MCP servers) | ❌  | ❌ (native binary, no dependencies) |
+| Windows native             | ✅              | ✅             | ✅ (Git for Windows required) |
+
+> ✅ Verified: Claude Code native Windows install (no WSL, no Node.js required) — code.claude.com/docs/en/setup, 2026-03-26
+> ⚠️ Claude Desktop Node.js requirement applies to local MCP server development only, not to the app itself — verify current setup docs before relying on this.
 
 ---
 
@@ -93,3 +97,13 @@ Need all three?
 ---
 
 *Doc 0 of 2 — see 01-claude-stack-explainer.md and 02-claude-stack-setup-manual.md*
+
+---
+
+| Field        | Value      |
+|:------------ |:---------- |
+| Version      | 1.1        |
+| Last Updated | 2026-03-26 |
+| Status       | Final      |
+
+*v1.1 — Claude Code: "Requires Node.js" corrected to ❌ (native binary, no dependencies); "runs in PowerShell" corrected to native Windows with Git for Windows required, WSL optional; Windows native row added to comparison table. Verified code.claude.com/docs/en/setup 2026-03-26.*

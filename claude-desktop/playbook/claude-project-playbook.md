@@ -2,7 +2,7 @@
 
 > Personal reference — how to configure and use a Claude Project effectively
 > Based on claude.ai Projects (Sonnet 4.6)
-> v2 — updated for multi-project architecture (2026-03-13)
+> v3.1 — Section 11 layer interaction chains corrected (2026-03-26)
 
 ---
 
@@ -100,64 +100,36 @@ Override: if user specifies another repo, switch target path
 | Counts against context window every turn | Lower context pressure per turn |
 | For instructions and behavior | For reference material and content |
 
-**File specs:** Individual files up to 30MB. Accepted formats: PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB, JSON, XLSX (XLSX requires code execution enabled). Unlimited files per project — but Claude retrieves only what fits within the active context window per answer. Projects with large knowledge bases automatically activate RAG mode to expand capacity beyond the context window limit.
+**File specs:**
 
-> ✅ **Correction:** JSON and XLSX added to file format list (verified against support.claude.com 2026-03-13). RAG mode note added.
+| Claim | Status |
+| :--- | :--- |
+| Individual files up to 30MB | ⚠️ Unverified — check support.claude.com before relying on this |
+| Accepted formats: PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB | ⚠️ Unverified — format list changes; verify before use |
+| JSON and XLSX supported (XLSX requires code execution enabled) | ✅ Verified: support.claude.com 2026-03-13 |
+| Unlimited files per project | ⚠️ Unverified — check support.claude.com before relying on this |
+| Large knowledge bases activate RAG mode automatically | ✅ Verified: support.claude.com 2026-03-13 |
+
+Claude retrieves only what fits within the active context window per answer. RAG mode expands effective capacity beyond the context window limit for large knowledge bases.
+
+> Note: The 30MB limit, format list, and file count cap are high-volatility claims — Anthropic updates these without versioned changelogs. Re-verify at support.claude.com before citing them in documentation.
 
 ---
 
 ## 3. Skills
 
-**What it is:** Folders of instructions, scripts, and resources that Claude loads dynamically to improve performance on specialized tasks. Skills are the official Anthropic mechanism — uploaded as ZIP files via Settings > Capabilities, or loaded from the filesystem via MCP in the workspace skills pattern.
+**What it is:** Folders of instructions, scripts, and resources that Claude loads dynamically to improve performance on specialized tasks. Skills are the official Anthropic mechanism — uploaded as ZIP files via Customize > Skills, or loaded from the filesystem via MCP in the workspace skills pattern.
 
 **Two skill models in this workspace:**
 
 | Model | How it works | When to use |
 | :--- | :--- | :--- |
-| **Uploaded skills** | ZIP file uploaded via Settings > Capabilities, stored per-user | Skills specific to one project |
-| **Workspace skills** | Folder at `skills/` path, loaded by the system prompt via Filesystem MCP | Skills reusable across multiple projects |
+| **Workspace skills** | Folder at `skills/` path, loaded by the system prompt via Filesystem MCP | Default pattern — skills reusable across multiple projects, under active development |
+| **Uploaded skills** | ZIP file uploaded via Customize > Skills, stored per-user | Skills with no MCP dependency; stable skills rarely edited |
 
 **Workspace skills caveat:** Workspace skills only load if (a) the system prompt instructs Claude to read them from the filesystem path and (b) the **Filesystem MCP is connected**. If MCP is disconnected, workspace skills are silently unavailable. Uploaded skills are unaffected by MCP status.
 
-**When to use:** Any task you repeat across conversations.
-
-**Skill structure** (the `SKILL.md` format):
-
-```markdown
----
-name: risk-review
-description: >
-  Review risks for any system design, architecture decision, or proposal.
-  Use when asked to review risks, identify issues, or flag blockers.
----
-
-## Instructions
-1. Identify top 3 risks by severity
-2. For each: impact, likelihood, mitigation
-3. Flag any blockers explicitly
-
-## Output
-Markdown table: Risk | Severity | Mitigation
-Avoid: generic risks, vague mitigations
-```
-
-**Invocation options:**
-
-| Style | Example |
-| :--- | :--- |
-| Explicit | `"run risk-review on this"` |
-| Automatic | Claude detects match via description field and triggers without being asked |
-| Parameterized | `"run risk-review for prod environment"` |
-
-**Storage decision:**
-
-| Where | When |
-| :--- | :--- |
-| Workspace skills folder (`skills/`) | Reusable across 2+ projects |
-| Uploaded ZIP (Settings > Capabilities) | Project-specific, no MCP dependency |
-| Inline in system prompt (old pattern) | Only for very short rules, ≤5 lines |
-
-**Skills quality gate:** Before treating a skill as production-ready, run an assessment pass: (1) test on 3–5 real trigger prompts and 2–3 non-trigger prompts; (2) verify the description is specific enough to avoid under-triggering; (3) check instructions against the official SKILL.md spec (frontmatter fields, body length, references/ structure); (4) verify any product claims or UI paths in the skill body against official Anthropic docs. See `skills-playbook.md` → Section 4 (build loop) and `skills-reference.md` for the spec. For a guided assessment workflow, ask Claude to run the skill-creator assessment.
+For full install, update, and maintenance procedures for both models: see `skills-playbook.md`.
 
 ---
 
@@ -387,17 +359,29 @@ What does NOT belong: content rules, output format, Claude instructions of any k
 
 ### How they interact
 
+The layers operate on two distinct axes — conflating them is the source of most confusion.
+
+**Content authority** — which layer's rules win when they conflict:
+
 ```
-System prompt          — routing + behaviour, generic across repos
-    ↓ reads on session start
-CLAUDE.md              — repo-wide defaults (format, tone, flagging)
-    ↓ applies to all use-cases in this repo
-CONSTITUTION.md        — use-case rules, overrides CLAUDE.md where they conflict
-    ↓ applies to this use-case only
-FRAMING.md             — user intent, read-only reference for Claude
+CONSTITUTION.md    ← highest content authority (use-case scope)
+    ↓ overrides
+CLAUDE.md          ← repo defaults (all use-cases in this repo)
+    ↓ overrides
+system prompt      ← tone/style defaults in <defaults> only
 ```
 
-Precedence: CONSTITUTION.md > CLAUDE.md > system prompt defaults. The system prompt is not overridden by repo files — it governs routing and session behaviour regardless.
+**Derivation** — which layer is the source of truth for content:
+
+```
+FRAMING.md         ← source of truth (user intent, immutable)
+    ↓ derived from
+CONSTITUTION.md    ← use-case rules (must align with FRAMING.md)
+```
+
+CLAUDE.md is set independently as the repo-wide baseline — it has no derivation relationship with FRAMING.md or CONSTITUTION.md.
+
+The system prompt governs **routing and behaviour**, not content. Its behavioural rules (e.g. "never write without confirmation") cannot be overridden by any content layer regardless of what CONSTITUTION.md or CLAUDE.md say. Routing rules determine which CLAUDE.md and CONSTITUTION.md apply before any content layer is consulted.
 
 ### When to create each file
 
@@ -552,4 +536,10 @@ Full worked examples are stored separately. Each example includes a system promp
 
 ---
 
-*Last updated: 2026-03-13 — v3: Section 3 skills quality gate added; Section 11 added (layer model — CLAUDE.md, CONSTITUTION.md, FRAMING.md); Section 12 added (operational hygiene — cold session bootstrap, TASKS.md continuity, token audit cadence, stale content risk). Lessons drawn from slide-gen and my-claude-fmk task history.*
+| Field        | Value      |
+|:------------ |:---------- |
+| Version      | 3.1        |
+| Last Updated | 2026-03-26 |
+| Status       | Final      |
+
+*v3.1 — Section 11 "How they interact": single mixed chain replaced with two-axis model (content authority / derivation), consistent with context-layers-guide.md v2.3. System prompt axis clarified as separate. CLAUDE.md correctly removed from derivation chain.*

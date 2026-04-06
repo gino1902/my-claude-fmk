@@ -1,7 +1,7 @@
 # Claude Power Stack — Technical Explainer
 
 > Windows 11 | Claude Desktop + MCP + Claude Code
-> Version 2.2
+> Version 2.4
 
 ---
 
@@ -45,16 +45,18 @@
 
 **What it does technically:**
 
-- Manages Remote MCP connections via **Settings > Connectors** (hosted services)
+- Manages Remote MCP connections via **Customize > Connectors** (hosted services)
 - Manages Local MCP extensions via **Settings > Extensions** (.mcpb bundles)
 - Exposes MCP server tools to the LLM as callable functions
 - Manages the conversation context window
 
 **Key settings paths:**
 
-- `Settings > Connectors` — hosted/remote MCP integrations (Gamma, Slack, etc.)
+- `Customize > Connectors` — hosted/remote MCP integrations (Gamma, Slack, etc.)
 - `Settings > Extensions` — local MCP bundles (.mcpb files)
 - `Settings > Developer` — advanced JSON config and logs (developers only)
+
+> ✅ Verified: `Customize > Connectors` path — Claude Desktop (2026-03-26)
 
 ---
 
@@ -123,11 +125,11 @@ This is the most critical distinction — using the wrong path is why connection
 | Transport        | HTTPS via Anthropic infrastructure | stdio (local process)          |
 | How to connect   | Customize > Connectors             | Settings > Extensions (.mcpb)  |
 | Examples         | Gamma, Slack, Google Drive, Notion | Filesystem, custom tools       |
-| Node.js required | ❌                                 | ❌ (bundled in Claude Desktop)|
-| JSON config file | ❌ Does not work                   | ✅ Developer use only         |
+| Node.js required | ❌                                 | ❌ (bundled in Claude Desktop) |
+| JSON config file | ❌ Does not work                   | ✅ Developer use only          |
 | Authentication   | OAuth flow in browser              | API key in extension settings  |
 
-**Rule:** If a service has a hosted MCP server (most SaaS tools do), always use **Connectors**. The `claude_desktop_config.json` file is for developers building custom local tools only.
+**Rule:** If a service has a hosted MCP server (most SaaS tools do), always use **Customize > Connectors**. The `claude_desktop_config.json` file is for developers building custom local tools only.
 
 ---
 
@@ -139,18 +141,16 @@ This is the most critical distinction — using the wrong path is why connection
 
 **A) Service is in the built-in directory** (Google Drive, GitHub, Gmail, Google Calendar):
 
-1. `Settings > Connectors > Browse Connectors`
+1. `Customize > Connectors > Browse Connectors`
 2. Find the service and click Connect → complete OAuth in browser
 
 **B) Service is not in the directory** (Gamma, Notion, Slack, and most others):
 
-1. `Settings > Connectors > Add custom connector`
+1. `Customize > Connectors > Add custom connector`
 2. Enter the service's remote MCP server URL
 3. Click Add → complete OAuth in browser
 
 No Node.js, no npx, no JSON config required. Authentication is handled entirely via OAuth.
-
-**Note:** Connectors have moved to **Customize > Connectors** in current versions of Claude Desktop (as of early 2026). The path `Settings > Connectors` may still appear in older versions.
 
 ---
 
@@ -175,23 +175,28 @@ Claude Desktop includes a built-in Node.js runtime — no Node.js install requir
 
 **What it does technically:**
 
-- Requires WSL2 on Windows — cannot run natively in PowerShell
+- Installs natively on Windows — requires Git for Windows (Git Bash), no WSL required
+- WSL1 and WSL2 are both supported as an alternative to native Windows
 - Has direct access to your **file system**, **shell**, and **git**
 - Can read, write, create, and delete files autonomously
 - Executes shell commands to run tests, install packages, start servers
 - Operates in a long-horizon agentic loop
 - Supports its own MCP configuration (separate from Claude Desktop)
+- Native binary — no Node.js dependency
+
+> ✅ Verified: Claude Code native Windows install (Git for Windows required, WSL optional, no Node.js needed) — code.claude.com/docs/en/setup, 2026-03-26
 
 **Key distinction from Claude Desktop:**
 
-| Capability     | Claude Desktop     | Claude Code         |
-|:-------------- |:------------------:|:-------------------:|
-| Interface      | GUI chat           | Terminal            |
-| File access    | Via MCP only       | Native              |
-| Shell access   | Via MCP only       | Native              |
-| Use case       | Tool orchestration | Agentic coding      |
-| MCP support    | ✅                 | ✅ (separate config) |
-| Windows native | ✅                 | ❌ Requires WSL2     |
+| Capability     | Claude Desktop     | Claude Code                          |
+|:-------------- |:------------------:|:------------------------------------:|
+| Interface      | GUI chat           | Terminal                             |
+| File access    | Via MCP only       | Native                               |
+| Shell access   | Via MCP only       | Native                               |
+| Use case       | Tool orchestration | Agentic coding                       |
+| MCP support    | ✅                 | ✅ (separate config)                  |
+| Windows native | ✅                 | ✅ (Git for Windows required)         |
+| WSL required   | ❌                 | ❌ (optional — WSL1 and WSL2 supported) |
 
 ---
 
@@ -222,16 +227,26 @@ Claude Desktop includes a built-in Node.js runtime — no Node.js install requir
 
 ## Recommended MCP Starter Stack
 
-| Service               | Type          | How to Connect                        |
-|:--------------------- |:-------------:|:------------------------------------- |
-| Gamma                 | Remote        | Add custom connector                  |
-| Google Drive          | Remote        | Browse Connectors                     |
-| Slack                 | Remote        | Add custom connector                  |
-| Notion                | Remote        | Add custom connector                  |
-| GitHub                | Remote        | Browse Connectors                     |
-| Filesystem            | Local (.mcpb) | Settings > Extensions > Browse        |
-| Custom internal tools | Local (.mcpb) | Settings > Extensions > Install .mcpb |
+| Service               | Type          | How to Connect                           |
+|:--------------------- |:-------------:|:---------------------------------------- |
+| Gamma                 | Remote        | Customize > Connectors > Add custom      |
+| Google Drive          | Remote        | Customize > Connectors > Browse          |
+| Slack                 | Remote        | Customize > Connectors > Add custom      |
+| Notion                | Remote        | Customize > Connectors > Add custom      |
+| GitHub                | Remote        | Customize > Connectors > Browse          |
+| Filesystem            | Local (.mcpb) | Settings > Extensions > Browse           |
+| Custom internal tools | Local (.mcpb) | Settings > Extensions > Install .mcpb    |
 
 ---
 
 *Doc 1 of 2 — see 02-claude-stack-setup-manual.md for installation instructions*
+
+---
+
+| Field        | Value      |
+|:------------ |:---------- |
+| Version      | 2.4        |
+| Last Updated | 2026-03-26 |
+| Status       | Final      |
+
+*v2.4 — Section 6 Claude Code: corrected "Requires WSL2 on Windows — cannot run natively in PowerShell" — Claude Code installs natively on Windows (Git for Windows required); WSL is optional not required; native binary has no Node.js dependency. Comparison table updated with Windows native and WSL required rows. Verified code.claude.com/docs/en/setup 2026-03-26.*
